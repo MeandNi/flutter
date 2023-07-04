@@ -15,6 +15,23 @@ import '../src/fake_process_manager.dart';
 import '../src/fakes.dart';
 
 void main() {
+  Future<BuildAarCommand> runCommandIn(String target, { List<String>? arguments }) async {
+    final BuildAarCommand command = BuildAarCommand(
+      androidSdk: FakeAndroidSdk(),
+      fileSystem: globals.fs,
+      logger: BufferLogger.test(),
+      verboseHelp: false,
+    );
+    final CommandRunner<void> runner = createTestCommandRunner(command);
+    await runner.run(<String>[
+      'aar',
+      '--no-pub',
+      ...?arguments,
+      target,
+    ]);
+    return command;
+  }
+
   group('CachedArtifacts', () {
     late CachedArtifacts artifacts;
     late Cache cache;
@@ -543,6 +560,18 @@ void main() {
         artifacts.getArtifactPath(Artifact.engineDartBinary, platform: TargetPlatform.web_javascript),
         fileSystem.path.join('/flutter', 'prebuilts', 'macos-x64', 'dart-sdk', 'bin', 'dart'),
       );
+    });
+
+    testWithoutContext('create local engine repo', () async {
+      final String xcframeworkPath = artifacts.getArtifactPath(
+        Artifact.flutterXcframework,
+        platform: TargetPlatform.android,
+        mode: BuildMode.release,
+      );
+
+      print('xcframeworkPath = $xcframeworkPath');
+
+
     });
   });
 }

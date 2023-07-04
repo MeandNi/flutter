@@ -42,7 +42,7 @@ class CreateLocalEngineRepoCommand extends FlutterCommand {
 
     globals.logger.printStatus('Create local engine repo at $outPath');
     createLocalEngineRepo(
-      repoPath: outPath,
+      localEngineRepoPath: outPath,
       engineOutPath: localEngineInfo.engineOutPath,
       fileSystem: _fileSystem,
     );
