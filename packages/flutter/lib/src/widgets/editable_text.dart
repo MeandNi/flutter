@@ -3502,7 +3502,7 @@ class EditableTextState extends State<EditableText> with AutomaticKeepAliveClien
       _textInputConnection!.connectionClosedReceived();
       _textInputConnection = null;
       _lastKnownRemoteTextEditingValue = null;
-      widget.focusNode.unfocus();
+      _finalizeEditing(TextInputAction.done, shouldUnfocus: true);
     }
   }
 
