@@ -696,6 +696,7 @@ class PageView extends StatefulWidget {
     this.hitTestBehavior = HitTestBehavior.opaque,
     this.scrollBehavior,
     this.padEnds = true,
+    this.enableEdgeAwareness = false,
   }) : childrenDelegate = SliverChildListDelegate(children);
 
   /// Creates a scrollable list that works page by page using widgets that are
@@ -741,6 +742,7 @@ class PageView extends StatefulWidget {
     this.hitTestBehavior = HitTestBehavior.opaque,
     this.scrollBehavior,
     this.padEnds = true,
+    this.enableEdgeAwareness = false,
   }) : childrenDelegate = SliverChildBuilderDelegate(
          itemBuilder,
          findChildIndexCallback: findChildIndexCallback,
@@ -774,6 +776,7 @@ class PageView extends StatefulWidget {
     this.hitTestBehavior = HitTestBehavior.opaque,
     this.scrollBehavior,
     this.padEnds = true,
+    this.enableEdgeAwareness = false,
   });
 
   /// Controls whether the widget's pages will respond to
@@ -881,6 +884,18 @@ class PageView extends StatefulWidget {
   /// This property defaults to true.
   final bool padEnds;
 
+  /// Whether to enable edge awareness for this page view.
+  ///
+  /// If this is set to true, the page view will detect when it's at the first or last page
+  /// and allow gestures to be passed through to parent widgets. This is particularly
+  /// useful for nested scrollable widgets where you want edge swipes to control a
+  /// parent widget (like a drawer or another page view) when this page view is at
+  /// its boundaries.
+  ///
+  /// Defaults to false, which means all gestures will be handled by this page view
+  /// regardless of its scroll position.
+  final bool enableEdgeAwareness;
+
   @override
   State<PageView> createState() => _PageViewState();
 }
@@ -944,6 +959,7 @@ class _PageViewState extends State<PageView> {
           )
           : widget.physics ?? widget.scrollBehavior?.getScrollPhysics(context),
     );
+    debugPrint('PageView, enableEdgeAwareness: ${widget.enableEdgeAwareness}');
 
     return NotificationListener<ScrollNotification>(
       onNotification: (ScrollNotification notification) {
@@ -968,6 +984,7 @@ class _PageViewState extends State<PageView> {
         hitTestBehavior: widget.hitTestBehavior,
         scrollBehavior:
             widget.scrollBehavior ?? ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        enableEdgeAwareness: widget.enableEdgeAwareness,
         viewportBuilder: (BuildContext context, ViewportOffset position) {
           return Viewport(
             // TODO(dnfield): we should provide a way to set cacheExtent

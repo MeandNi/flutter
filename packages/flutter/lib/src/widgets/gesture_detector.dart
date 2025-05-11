@@ -1552,6 +1552,7 @@ class RawGestureDetectorState extends State<RawGestureDetector> {
         oldRecognizers[type]!.dispose();
       }
     }
+    debugPrint('_recognizers: $_recognizers');
   }
 
   void _handlePointerDown(PointerDownEvent event) {

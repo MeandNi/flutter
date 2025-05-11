@@ -666,7 +666,7 @@ sealed class DragGestureRecognizer extends OneSequenceGestureRecognizer {
       _velocityTrackers[event.pointer]!.addPosition(event.timeStamp, position);
     }
     if (event is PointerMoveEvent && event.buttons != _initialButtons) {
-      _giveUpPointer(event.pointer);
+      giveUpPointer(event.pointer);
       return;
     }
     if ((event is PointerMoveEvent || event is PointerPanZoomUpdateEvent) &&
@@ -722,7 +722,7 @@ sealed class DragGestureRecognizer extends OneSequenceGestureRecognizer {
       _recordMoveDeltaForMultitouch(event.pointer, localDelta);
     }
     if (event case PointerUpEvent() || PointerCancelEvent() || PointerPanZoomEndEvent()) {
-      _giveUpPointer(event.pointer);
+      giveUpPointer(event.pointer);
     }
   }
 
@@ -746,7 +746,7 @@ sealed class DragGestureRecognizer extends OneSequenceGestureRecognizer {
 
   @override
   void rejectGesture(int pointer) {
-    _giveUpPointer(pointer);
+    giveUpPointer(pointer);
   }
 
   @override
@@ -769,7 +769,8 @@ sealed class DragGestureRecognizer extends OneSequenceGestureRecognizer {
     _state = _DragState.ready;
   }
 
-  void _giveUpPointer(int pointer) {
+  /// Gives up the pointer and resolves the gesture.
+  void giveUpPointer(int pointer) {
     stopTrackingPointer(pointer);
     // If we never accepted the pointer, we reject it since we are no longer
     // interested in winning the gesture arena for it.
